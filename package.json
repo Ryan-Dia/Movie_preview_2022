@@ -1,5 +1,5 @@
 {
-  "name": "react-master-netflix",
+  "name": "react-master-preview",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -65,5 +65,5 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.24"
   },
-  "homepage": "https://RyanDeclan.github.io/Netflix_Clon_2022"
+  "homepage": "https://RyanDeclan.github.io/Movie_preview_2022"
 }
