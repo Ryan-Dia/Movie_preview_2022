@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/Movie_preview_2022/static/css/main.0eb7989b.css",
+    "main.js": "/Movie_preview_2022/static/js/main.3c8f8098.js",
+    "static/media/HSGyeoulNoonkott2.0-Regular.ttf": "/Movie_preview_2022/static/media/HSGyeoulNoonkott2.0-Regular.0a0047cf3b2c45593f97.ttf",
+    "static/media/GowunDodum-Regular.ttf": "/Movie_preview_2022/static/media/GowunDodum-Regular.af5304a39dc307a26989.ttf",
+    "static/media/LeferiPointWhiteOblique.ttf": "/Movie_preview_2022/static/media/LeferiPointWhiteOblique.eb1b2574d3249f838098.ttf",
+    "static/media/tway_sky.ttf": "/Movie_preview_2022/static/media/tway_sky.e5dbc4aee02ebbcb0057.ttf",
+    "static/media/establish Retrosans.ttf": "/Movie_preview_2022/static/media/establish Retrosans.375414532ca4ffbc036e.ttf",
+    "index.html": "/Movie_preview_2022/index.html",
+    "main.0eb7989b.css.map": "/Movie_preview_2022/static/css/main.0eb7989b.css.map",
+    "main.3c8f8098.js.map": "/Movie_preview_2022/static/js/main.3c8f8098.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0eb7989b.css",
+    "static/js/main.3c8f8098.js"
+  ]
+}
