@@ -1,29 +1,31 @@
-import { useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
-import { ISearch, multiSearch } from "../api";
-import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
-import { makeImagePath } from "../utils";
-import { useEffect, useState } from "react";
-import BoxVideo from "./boxVideo";
-
-
+import { useQuery } from 'react-query';
+import { useLocation } from 'react-router-dom';
+import { ISearch, multiSearch } from '../api';
+import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { makeImagePath } from '../utils';
+import { useEffect, useState } from 'react';
+import BoxVideo from './boxVideo';
 
 const Wrapper = styled.div`
-  
   height: 180vh;
   overflow: hidden;
   gap: 20px;
 `;
 
-const Slider = styled.div`
+const Wrapper2 = styled.div`
+  height: 50vh;
+  overflow: hidden;
+  gap: 20px;
+`;
 
+const Slider = styled.div`
   position: relative;
   top: 15vh;
-  z-index:2;
-  `;
+  z-index: 2;
+`;
 
-  const Row = styled(motion.div)`
+const Row = styled(motion.div)`
   display: grid;
   gap: 0.5vw;
   grid-template-columns: repeat(6, 1fr);
@@ -35,7 +37,7 @@ const Slider = styled.div`
   margin-top: 5vh;
 `;
 
-const Box = styled(motion.div)<{ bgphoto: string }>`
+const Box = styled(motion.div)<{ bgphoto?: string }>`
   font-size: 64px;
   cursor: pointer;
   &:first-child {
@@ -45,6 +47,7 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     transform-origin: center right;
   }
   background-image: url(${(props) => props.bgphoto});
+  background-color: white;
   background-size: cover;
   background-position: center;
   height: 41vh;
@@ -57,8 +60,8 @@ const boxVariants = {
   hover: {
     y: -80,
     scale: 1.3,
-    zIndex:5,
-    transition: { delay: 1, type: "tween", duration: 0.2 },
+    zIndex: 5,
+    transition: { delay: 1, type: 'tween', duration: 0.2 },
   },
 };
 
@@ -81,90 +84,70 @@ const infoVariants = {
   },
   hover: {
     opacity: 1,
-    transition: { delay: 1.4, type: "tween", duration: 0.8 },
+    transition: { delay: 1.4, type: 'tween', duration: 0.8 },
   },
 };
 
 const offset = 6;
 
-
-
 function Search() {
   const location = useLocation();
   // urlserchparasm 는 파싱하는데 도움을 준다.
-  const keyword = new URLSearchParams(location.search).get("keyword")!;
-  const [hovers, setHovers] = useState(false);
-  const [nums, setnums] = useState(0);
-  const hoverBox = () => {
-    setHovers(true);
+  const keyword = new URLSearchParams(location.search).get('keyword')!;
+  const { data, isLoading } = useQuery<ISearch>(['Search'], () => multiSearch(keyword));
+
+  const [index, setIndex] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+  const increaseIndex = () => {
+    if (data) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = data.results.length;
+      const maxIndex = Math.floor(totalMovies / offset);
+      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
   };
-  const hoverNum = (num: number) => {
-    setnums(num);
-  };
-  const hoverOut = () => {
-    setHovers(false);
+  const rowVariants = {
+    hidden: {
+      x: window.outerWidth,
+    },
+    visible: {
+      x: 0,
+    },
+    exit: {
+      x: -window.outerWidth,
+    },
   };
 
-  const { data, isLoading } = useQuery<ISearch>(
-    ["Search"],
-    ()=> multiSearch(keyword),
-  
-  );
-
+  const toggleLeaving = () => setLeaving((prev) => !prev);
 
   return (
-  
-  <Wrapper>
-    <Slider>
-            
-      <AnimatePresence>
-        <Row
-          
-        >
-         
-          {data?.results
-            .slice(0, offset * 2 + offset)
-            .map((movie) => (
-              <Box
-                layoutId={movie.id + ""}
-                key={movie.id}
-                whileHover="hover"
-       
-                initial="normal"
-                variants={boxVariants}
-             
-                transition={{ type: "tween" }}
-                bgphoto={makeImagePath(movie.poster_path!, "w500")}
-              >
-                <Info
-                  initial="normal"
-                  whileHover="hover"
-                  transition={{ type: "tween" }}
-                  key={movie.id + "bbq"}
-                  variants={infoVariants}
-                  
-    
-                >
-                  {hovers ? (
-                    nums === movie.id ? (
-                      <BoxVideo
-                        id={movie.id}
-                        gre={movie.genre_ids}
-                        title={movie.title}
-                        vote={movie.vote_average}
-                      ></BoxVideo>
-                    ) : null
-                  ) : null}
-                </Info>
-              </Box>
-            ))}
-        </Row>
-      </AnimatePresence>
-      
-    </Slider>
-    
-  </Wrapper>
-  
+    <>
+      <Wrapper2>
+        <Slider>
+          <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+            <Row
+              variants={rowVariants}
+              initial='hidden'
+              animate='visible'
+              exit='exit'
+              key={index}
+              transition={{ type: 'tween', duration: 1 }}
+            >
+              {data?.results
+                .slice(offset * index, offset * index + offset)
+                .map((poster) => (
+                  <Box
+                    key={poster.id}
+                    bgphoto={makeImagePath(poster.poster_path!, 'w500')}
+                  ></Box>
+                ))}
+            </Row>
+          </AnimatePresence>
+        </Slider>
+      </Wrapper2>
+      <button onClick={increaseIndex}>다음</button>
+    </>
   );
 }
 
